@@ -607,7 +607,7 @@ function TimePickerCtrl($scope, $mdDialog, time, autoSwitch, $mdMedia) {
 	};
     
     this.cancel = function() {
-        $mdDialog.cancel();
+        $mdDialog.hide();
     };
 
     this.confirm = function() {
@@ -779,7 +779,7 @@ module.provider("$mdpTimePicker", function() {
             return $mdDialog.show({
                 controller:  ['$scope', '$mdDialog', 'time', 'autoSwitch', '$mdMedia', TimePickerCtrl],
                 controllerAs: 'timepicker',
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 template: '<md-dialog aria-label="" class="mdp-timepicker" ng-class="{ \'portrait\': !$mdMedia(\'gt-xs\') }">' +
                             '<md-dialog-content layout-gt-xs="row" layout-wrap>' +
                                 '<md-toolbar layout-gt-xs="column" layout-xs="row" layout-align="center center" flex class="mdp-timepicker-time md-hue-1 md-primary">' +
@@ -800,8 +800,8 @@ module.provider("$mdpTimePicker", function() {
                                     
                                     '<md-dialog-actions layout="row">' +
 	                                	'<span flex></span>' +
-                                        '<md-button ng-click="timepicker.cancel()" aria-label="' + LABEL_CANCEL + '">' + LABEL_CANCEL + '</md-button>' +
-                                        '<md-button ng-click="timepicker.confirm()" class="md-primary" aria-label="' + LABEL_OK + '">' + LABEL_OK + '</md-button>' +
+                                        '<md-button class="md-raised" ng-click="timepicker.cancel()" aria-label="' + LABEL_CANCEL + '">' + LABEL_CANCEL + '</md-button>' +
+                                        '<md-button class="md-raised md-accent" ng-click="timepicker.confirm()" class="md-primary" aria-label="' + LABEL_OK + '">' + LABEL_OK + '</md-button>' +
                                     '</md-dialog-actions>' +
                                 '</div>' +
                             '</md-dialog-content>' +
@@ -811,7 +811,9 @@ module.provider("$mdpTimePicker", function() {
                     time: time,
                     autoSwitch: options.autoSwitch
                 },
-                skipHide: true
+                skipHide: true,
+                escapeToClose: false,
+                fullscreen: true
             });
         };
     
@@ -926,7 +928,9 @@ module.directive("mdpTimePicker", ["$mdpTimePicker", "$timeout", function($mdpTi
                     targetEvent: ev,
                     autoSwitch: scope.autoSwitch
                 }).then(function(time) {
-                    updateTime(time, true);
+                    if(time) {
+                        updateTime(time, true);
+                    }
                 });
             };
             
